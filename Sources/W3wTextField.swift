@@ -25,14 +25,14 @@ public struct flag {
 }
 
 struct Coordinates {
-  let latitude: Double
-  let longitude: Double
-
-  init(coordinateString: String) {
-    let crdSplit = coordinateString.split(separator: ",")
-    latitude = atof(String(crdSplit.first!))
-    longitude = atof(String(crdSplit.last!))
-  }
+    let latitude: Double
+    let longitude: Double
+    
+    init(coordinateString: String) {
+        let crdSplit = coordinateString.split(separator: ",")
+        latitude = atof(String(crdSplit.first!))
+        longitude = atof(String(crdSplit.last!))
+    }
 }
 
 struct Clip {
@@ -110,7 +110,7 @@ open class W3wTextField: UITextField {
     @IBInspectable  public var listHeight: CGFloat = 350 {
         didSet { }
     }
-
+    
     // set number of results to return
     @IBInspectable public var nResults : Int = 3 {
         didSet {
@@ -123,7 +123,7 @@ open class W3wTextField: UITextField {
             self.isDebugMode = debug
         }
     }
-
+    
     // comma separated lat/lng of point to focus on
     @IBInspectable public var autoFocus: String  = "" {
         didSet {
@@ -134,21 +134,21 @@ open class W3wTextField: UITextField {
             }
         }
     }
-
+    
     // set the number of results within what is returned to apply the focus to
     @IBInspectable public var nFocusResults : Int = 3 {
         didSet {
             self.options.append(NumberFocusResults(numberFocusResults: nFocusResults))
         }
     }
-
+    
     // confine results to a given country or comma separated list of countries
     @IBInspectable public var clipToCountry : String  = "" {
         didSet {
             self.options.append(ClipToCountry(country: clipToCountry))
         }
     }
-
+    
     // Confine results to a bounding box specified using co-ordinates
     @IBInspectable public var clipToBoundingBox : String = "" {
         didSet {
@@ -165,7 +165,7 @@ open class W3wTextField: UITextField {
             self.options.append(BoundingCircle(lat: (clipCircle?.first!.latitude)!, lng:  (clipCircle?.first?.longitude)!, kilometers: (clip.kilometers as NSString).doubleValue))
         }
     }
-
+    
     // Restrict autosuggest results to a polygon, specified by a comma-separated list of lat,lng pairs.
     @IBInspectable public var clipToPolygon : String = "" {
         didSet {
@@ -178,7 +178,7 @@ open class W3wTextField: UITextField {
     public  var selectedIndex: Int?
     
     let countries = ["ad", "ae", "af", "ag", "ai", "al", "am", "ao", "aq", "ar", "as", "at", "au", "aw", "ax", "az", "ba", "bb", "bd", "be", "bf", "bg", "bh", "bi", "bj", "bl", "bm", "bn", "bo", "bq", "br", "bs", "bt", "bv", "bw", "by", "bz", "ca", "cc", "cd", "cf", "cg", "ch", "ci", "ck", "cl", "cm", "cn", "co", "cr", "cu", "cv", "cw", "cx", "cy", "cz", "de", "dj", "dk", "dm", "do", "dz", "ec", "ee", "eg", "eh", "er", "es", "et", "eu", "fi", "fj", "fk", "fm", "fo", "fr", "ga", "gb-eng", "gb-nir", "gb-sct", "gb-wls", "gb", "gd", "ge", "gf", "gg", "gh", "gi", "gl", "gm", "gn", "gp", "gq", "gr", "gs", "gt", "gu", "gw", "gy", "hk", "hm", "hn", "hr", "ht", "hu", "id", "ie", "il", "im", "in", "io", "iq", "ir", "is", "it", "je", "jm", "jo", "jp", "ke", "kg", "kh", "ki", "km", "kn", "kp", "kr", "kw", "ky", "kz", "la", "lb", "lc", "li", "lk", "lr", "ls", "lt", "lu", "lv", "ly", "ma", "mc", "md", "me", "mf", "mg", "mh", "mk", "ml", "mm", "mn", "mo", "mp", "mq", "mr", "ms", "mt", "mu", "mv", "mw", "mx", "my", "mz", "na", "nc", "ne", "nf", "ng", "ni", "nl", "no", "np", "nr", "nu", "nz", "om", "pa", "pe", "pf", "pg", "ph", "pk", "pl", "pm", "pn", "pr", "ps", "pt", "pw", "py", "qa", "re", "ro", "rs", "ru", "rw", "sa", "sb", "sc", "sd", "se", "sg", "sh", "si", "sj", "sk", "sl", "sm", "sn", "so", "sr", "ss", "st", "sv", "sx", "sy", "sz", "tc", "td", "tf", "tg", "th", "tj", "tk", "tl", "tm", "tn", "to", "tr", "tt", "tv", "tw", "tz", "ua", "ug", "um", "un", "us", "uy", "uz", "va", "vc", "ve", "vg", "vi", "vn", "vu", "wf", "ws", "ye", "yt", "za", "zm", "zw", "zz"]
-
+    
     let cellIdentifier = "DropDownCell"
     // Setup row height
     public var rowHeight: CGFloat = 72
@@ -224,28 +224,28 @@ open class W3wTextField: UITextField {
             
             self.debouncer.call { [weak self] in
                 W3wGeocoder.shared.autosuggest(input: self!.searchText, options: (self?.options)! ) { (suggestions, error) in
-                if let e = error {
-                    self!.isDebugMode ? assertionFailure(e.message) : print(e.message)
-                }
-                
-                guard suggestions?.count != nil else {
-                    return
-                }
+                    if let e = error {
+                        self!.isDebugMode ? assertionFailure(e.message) : print(e.message)
+                    }
+                    
+                    guard suggestions?.count != nil else {
+                        return
+                    }
                     self?.optionArray.removeAll()
-                self?.dataArray.removeAll()
-                for suggestion in suggestions ?? [] {
-                    self?.optionArray.append(suggestion)
-                    self?.dataArray = self!.optionArray
-                    DispatchQueue.main.async {
-                        if (self?.dataArray.count)! > 0 {
-                            self!.table.reloadData()
+                    self?.dataArray.removeAll()
+                    for suggestion in suggestions ?? [] {
+                        self?.optionArray.append(suggestion)
+                        self?.dataArray = self!.optionArray
+                        DispatchQueue.main.async {
+                            if (self?.dataArray.count)! > 0 {
+                                self!.table.reloadData()
+                            }
                         }
                     }
                 }
             }
-        }
-        reSizeTable()
-        selectedIndex = nil
+            reSizeTable()
+            selectedIndex = nil
             if self.dataArray.count > 0 {
                 self.table.reloadData()
             }
@@ -258,7 +258,7 @@ open class W3wTextField: UITextField {
         setupUI()
         self.delegate = self
     }
-
+    
     public required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
         setupUI()
@@ -323,19 +323,19 @@ open class W3wTextField: UITextField {
         
         self.backgroundView.backgroundColor = .clear
         self.checkMarkView.isHidden = true
-
+        
         if isSearchEnable {
             NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: nil) { (notification) in
                 if self.isFirstResponder{
-                let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+                    let userInfo:NSDictionary = notification.userInfo! as NSDictionary
                     let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
-                let keyboardRectangle = keyboardFrame.cgRectValue
-                self.keyboardHeight = keyboardRectangle.height
+                    let keyboardRectangle = keyboardFrame.cgRectValue
+                    self.keyboardHeight = keyboardRectangle.height
                 }
             }
             NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: nil) { (notification) in
                 if self.isFirstResponder{
-                self.keyboardHeight = 0
+                    self.keyboardHeight = 0
                 }
             }
         }
@@ -347,7 +347,7 @@ open class W3wTextField: UITextField {
     
     // touch action
     @objc public func touchAction() {
-
+        
         isSelected ?  hideList() : showList()
     }
     
@@ -408,7 +408,7 @@ open class W3wTextField: UITextField {
             self.layoutIfNeeded()
         })
     }
-
+    
     public func hideList() {
         TableWillDisappearCompletion()
         UIView.animate(withDuration: 1.0, delay: 0.4, usingSpringWithDamping: 0.9, initialSpringVelocity: 0.1, options: .curveEaseInOut, animations: { () -> Void in
@@ -436,27 +436,27 @@ open class W3wTextField: UITextField {
             self.layoutIfNeeded()
         })
     }
-
+    
     public func didSelect(completion: @escaping (_ selectedText: String ) -> ()) {
         didSelectCompletion = completion
     }
-
+    
     public func listWillAppear(completion: @escaping () -> ()) {
         TableWillAppearCompletion = completion
     }
-
+    
     public func listDidAppear(completion: @escaping () -> ()) {
         TableDidAppearCompletion = completion
     }
-
+    
     public func listWillDisappear(completion: @escaping () -> ()) {
         TableWillDisappearCompletion = completion
     }
-
+    
     public func listDidDisappear(completion: @escaping () -> ()) {
         TableDidDisappearCompletion = completion
     }
-
+    
 }
 
 //MARK: UITextFieldDelegate
@@ -485,8 +485,8 @@ extension W3wTextField : UITextFieldDelegate {
         if string != "" {
             self.searchText = "\(textField.text ?? "")\(String(describing: string.trimmingCharacters(in: .whitespaces)))"
         } else{
-                let subText = self.text?.dropLast()
-                self.searchText = String(subText!.trimmingCharacters(in: .whitespaces))
+            let subText = self.text?.dropLast()
+            self.searchText = String(subText!.trimmingCharacters(in: .whitespaces))
             //}
         }
         
@@ -494,18 +494,17 @@ extension W3wTextField : UITextFieldDelegate {
             hideList()
         }
         
-    
-        W3wGeocoder.shared.convertToCoordinates(words: self.searchText)  { (place, error) in
-            if (( place?.coordinates ) != nil)
-            {
-                DispatchQueue.main.async {
-                    
-                    self.checkMarkView.isHidden = false
-                }
-            } else {
+        
+        W3wGeocoder.shared.convertToCoordinates(words: self.searchText)  { (response, error) in
+            guard (response?.0) != nil else {
                 DispatchQueue.main.async {
                     self.checkMarkView.isHidden = true
                 }
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.checkMarkView.isHidden = false
             }
         }
         return true;
@@ -524,11 +523,11 @@ extension W3wTextField: UITableViewDataSource {
         }
         return 0
     }
-
+    
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return rowHeight
     }
-
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:SuggestionTableViewCell = (tableView.dequeueReusableCell(withIdentifier: cellIdentifier) as! SuggestionTableViewCell?)!
         cell.layer.borderColor = #colorLiteral(red: 0.8980392157, green: 0.8980392157, blue: 0.8980392157, alpha: 1)
@@ -544,14 +543,14 @@ extension W3wTextField: UITableViewDataSource {
     
     // Crop country flag
     func countryFlagCrop(countryIndex: Int) -> UIImage {
-            let row = countryIndex % flag.cols
-            let col = countryIndex / flag.rows
-            let x = row * flag.width
-            let y = col * flag.height
-            let bundle = Bundle.init(for: W3wTextField.self)
-            let clearImage = UIImage(named: "flags", in: bundle, compatibleWith: nil)
-            let croppedImage = UIImage(cgImage: (clearImage?.cgImage?.cropping(to: CGRect(x: x, y: y, width: flag.width, height: flag.height)))!)
-            return croppedImage
+        let row = countryIndex % flag.cols
+        let col = countryIndex / flag.rows
+        let x = row * flag.width
+        let y = col * flag.height
+        let bundle = Bundle.init(for: W3wTextField.self)
+        let clearImage = UIImage(named: "flags", in: bundle, compatibleWith: nil)
+        let croppedImage = UIImage(cgImage: (clearImage?.cgImage?.cropping(to: CGRect(x: x, y: y, width: flag.width, height: flag.height)))!)
+        return croppedImage
     }
 }
 
@@ -593,7 +592,7 @@ extension UIView {
         mask.path = path.cgPath
         layer.mask = mask
     }
-
+    
 }
 
 class SuggestionTableViewCell: UITableViewCell {
@@ -623,7 +622,7 @@ class SuggestionTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont .systemFont(ofSize: 12)
         return label
-
+        
     }()
     // W3wSuggestion -country
     let country_flag : UIImageView = {
@@ -636,7 +635,7 @@ class SuggestionTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -644,7 +643,7 @@ class SuggestionTableViewCell: UITableViewCell {
         self.containerView.addSubview(country_flag)
         self.containerView.addSubview(nearest_place)
         self.contentView.addSubview(containerView)
-
+        
         // set up container view
         containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor).isActive = true
         containerView.leadingAnchor.constraint(equalTo:self.contentView.leadingAnchor, constant: Margin).isActive = true
@@ -672,29 +671,29 @@ class SuggestionTableViewCell: UITableViewCell {
 }
 
 public class Debouncer {
-  
-  private var callback: (() -> Void)?
-  private let interval: TimeInterval
-  private var timer: Timer?
-  
-  public init(interval: TimeInterval) {
-    self.interval = interval
-  }
-  
-  // Indicate that the callback should be called. Begins the debounce window.
-  public func call(callback: (() -> Void)?) {
-    // Invalidate existing timer if there is one
-    timer?.invalidate()
     
-    // Save callback
-    self.callback = callback
+    private var callback: (() -> Void)?
+    private let interval: TimeInterval
+    private var timer: Timer?
     
-    // Begin a new timer from now
-    timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: false)
-  }
-  
-  @objc private func handleTimer(_ timer: Timer) {
-    self.callback?()
-    self.callback = nil
-  }
+    public init(interval: TimeInterval) {
+        self.interval = interval
+    }
+    
+    // Indicate that the callback should be called. Begins the debounce window.
+    public func call(callback: (() -> Void)?) {
+        // Invalidate existing timer if there is one
+        timer?.invalidate()
+        
+        // Save callback
+        self.callback = callback
+        
+        // Begin a new timer from now
+        timer = Timer.scheduledTimer(timeInterval: interval, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: false)
+    }
+    
+    @objc private func handleTimer(_ timer: Timer) {
+        self.callback?()
+        self.callback = nil
+    }
 }
